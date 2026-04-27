@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            margin: auto;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px;
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 1em;
+            z-index: 1000;
+            display: none;
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .notification.error {
+            background: #f44336;
+            color: white;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="notification" id="notification"></div>
+
+<div class="login-box">
+    <h2>Login</h2>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+</div>
+
+<script>
+// Notification function
+function showNotification(message, type) {
+    let notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.className = "notification show " + type;
+    
+    // Auto dismiss after 4 seconds
+    setTimeout(() => {
+        notification.classList.remove("show");
+    }, 4000);
+}
+
+// Password validation function
+function validatePassword(pass) {
+    console.log("Validating password: " + pass);
+    console.log("Password length: " + pass.length);
+    
+    // Check if password is at least 8 characters
+    if(pass.length < 8) {
+        console.log("Password too short (less than 8 characters)");
+        return false;
+    }
+    
+    // Check for uppercase letters
+    let hasUppercase = /[A-Z]/.test(pass);
+    console.log("Has uppercase: " + hasUppercase);
+    
+    // Check for lowercase letters
+    let hasLowercase = /[a-z]/.test(pass);
+    console.log("Has lowercase: " + hasLowercase);
+    
+    // Return true only if both conditions are met
+    let isValid = hasUppercase && hasLowercase;
+    console.log("Validation result: " + (isValid ? "✅ PASS" : "❌ FAIL"));
+    return isValid;
+}
+
+function login() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    console.log("--- Login Attempt ---");
+    console.log("Username: " + user);
+    console.log("Password: " + pass);
+
+    if(user === "" || pass === "") {
+        console.log("❌ Empty fields detected");
+        showNotification("Please fill in all fields ⚠️", "error");
+        return;
+    }
+
+    if(!validatePassword(pass)) {
+        console.log("❌ Password validation failed");
+        showNotification("Password must be 8+ characters with uppercase and lowercase", "error");
+        return;
+    }
+
+    console.log("✅ Login validation passed!");
+    showNotification("Login Successful ✅", "success");
+}
+
+// Add event listener to password field to log input in real-time
+document.getElementById("password").addEventListener("input", function() {
+    console.log("Password input: " + this.value);
+});
+
+// Add event listener to username field to log input in real-time
+document.getElementById("username").addEventListener("input", function() {
+    console.log("Username input: " + this.value);
+});
+
+console.log("Page loaded - Password validation form ready");
+</script>
+
+</body>
+</html>
